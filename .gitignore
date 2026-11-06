@@ -1,0 +1,25 @@
+# Зависимости и сборки Frontend (Vue / Vite)
+node_modules/
+dist/
+.DS_Store
+
+# Переменные окружения (ЛР6: .env скрыт, но .env.example в Git)
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Сборки и временные файлы Backend (.NET / C# — ЛР7–ЛР8)
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Локальные и служебные папки
+.vscode/
+.idea/
+*.log
