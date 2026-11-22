@@ -6,7 +6,6 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/orders")]
-[Route("api/tickets")]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -21,7 +20,7 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
-    /// Получить список всех заказов (включая пустой массив [] со статусом 200).
+    /// Список всех заказов (200, включая пустой массив).
     /// </summary>
     [HttpGet]
     public ActionResult<IReadOnlyList<OrderResponse>> GetAll()
@@ -30,7 +29,7 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
-    /// Получить один заказ по id (200 или 404).
+    /// Один заказ по id (200 или 404).
     /// </summary>
     [HttpGet("{id:int}")]
     public ActionResult<OrderResponse> GetById(int id)
@@ -50,12 +49,12 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
-    /// Создать новый заказ (201 Created или 400 Bad Request).
+    /// Создание заказа (201 Created или 400 Bad Request).
     /// </summary>
     [HttpPost]
     public ActionResult<OrderResponse> Create([FromBody] CreateOrderRequest? request)
     {
-        var modelId = request?.ResolvedModelId ?? 0;
+        var modelId = request?.ModelId ?? 0;
 
         try
         {
@@ -71,15 +70,12 @@ public class OrdersController : ControllerBase
                 });
             }
 
-            // Для проверки п. 5.3 методички (раскомментировать временно для скриншота лога 500, затем снова закомментировать):
-            // throw new InvalidOperationException("Simulated unexpected failure after validation");
-
             var created = result.Data!;
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
         catch (Exception ex)
         {
-            // Пункт 5.3: одна понятная строка в логе сервера и безопасный ProblemDetails клиенту без stack trace
+            // В лог пишется одна строка без секретов и без тела запроса, клиент получает безопасный ответ
             _logger.LogError(
                 "CreateOrder failed; modelId={ModelId}; error={ErrorType}",
                 modelId,
@@ -93,7 +89,7 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
-    /// Отдельно назначить исполнителя заказа (200, 400, 404 или 409 для завершённого заказа).
+    /// Назначение исполнителя (200, 400, 404 или 409 для завершённого заказа).
     /// </summary>
     [HttpPatch("{id:int}/assignee")]
     public ActionResult<OrderResponse> AssignAssignee(int id, [FromBody] AssignAssigneeRequest? request)
@@ -103,7 +99,7 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
-    /// Отдельно изменить статус заказа (200, 400, 404 или 409 при недопустимом переходе / отсутствии исполнителя для InProgress).
+    /// Смена статуса (200, 400, 404 или 409 при недопустимом переходе).
     /// </summary>
     [HttpPatch("{id:int}/status")]
     public ActionResult<OrderResponse> ChangeStatus(int id, [FromBody] ChangeStatusRequest? request)

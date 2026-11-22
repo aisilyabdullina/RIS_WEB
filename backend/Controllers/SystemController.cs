@@ -28,7 +28,7 @@ public class SystemController : ControllerBase
         {
             app = _orderService.GetApplicationName(),
             environment = _environment.EnvironmentName,
-            version = "ЛР8",
+            version = "ЛР10",
             note = _orderService.GetLabStageNote()
         });
     }

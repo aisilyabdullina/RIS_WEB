@@ -1,4 +1,4 @@
-// Коды статусов (как в API) -> подписи на экране
+// Коды статусов заказа (как в API) и их подписи на экране
 export const STATUS_LABELS = {
   New: 'Принят',
   InProgress: 'В производстве',
@@ -6,8 +6,6 @@ export const STATUS_LABELS = {
   Cancelled: 'Отменён'
 }
 
-export const ROLE_LABELS = {
-  Manager: 'Менеджер по заказам',
-  Engineer: 'Инженер-наладчик',
-  Chief: 'Начальник участка'
+export function statusLabel(code) {
+  return STATUS_LABELS[code] ?? code
 }

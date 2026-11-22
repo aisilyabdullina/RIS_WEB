@@ -23,13 +23,13 @@
 | `PATCH /api/orders/{id}/assignee`     | `200 OK`      | `400`, `404`, `409`| Отдельно назначает исполнителя (`{ "assigneeUserId": 5 }`, целое число > 0). Для завершённого заказа — `409`. |
 | `PATCH /api/orders/{id}/status`       | `200 OK`      | `400`, `404`, `409`| Отдельно меняет статус (`New`, `InProgress`, `Closed`, `Cancelled`). Недопустимый переход или `InProgress` без исполнителя — **`409 Conflict`**. |
 
-Метод `DELETE` не используется: отмена заказа — статус `Cancelled`. Маршруты также доступны по псевдониму `/api/tickets` (имя из методички).
+Метод `DELETE` не используется: отмена заказа — статус `Cancelled`.
 
 ---
 
 ## 3. Обязательные запросы из коллекции
 
-Коллекция лежит в `docs/api-collection/orders.postman_collection.json` (копия под стандартным именем — `tickets.postman_collection.json`).
+Коллекция лежит в `docs/api-collection/orders.postman_collection.json`.
 
 1. **Успешный `POST /api/orders`** с телом `{"title": "Контроллеры для линии упаковки", "modelId": 2, "description": "6 шт., интерфейс Modbus TCP, исполнение для работы при температуре до +70 °C"}` → **`201 Created`**, в теле `id`, `number` (`ЗК-2026-0003`), `"status": "New"`, `"assigneeUserId": null`.
 2. **`POST` с коротким `title` из 3 символов (`"Абв"`)** → **`400 Bad Request`** (`ValidationProblemDetails`: поле `title` должно содержать от 5 до 80 символов).

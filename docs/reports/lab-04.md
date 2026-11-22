@@ -9,9 +9,7 @@
 
 ## 1. Цель работы
 
-Разрезать каркас на компоненты и страницы, подключить `vue-router`: шапка `AppHeader` остаётся на месте снаружи `router-view`, маршруты `/`, `/new`, `/login` открываются и по ссылкам меню, и вводом адреса вручную, таблица `TicketTable.vue` получает данные через `props`, а единственный общий массив записей лежит в `ticketsStore.js`.
-
-Названия файлов `Ticket*` и `ticketsStore.js` взяты из методички курса; в нашей теме «ticket» — это заказ на контроллер.
+Разрезать каркас на компоненты и страницы, подключить `vue-router`: шапка `AppHeader` остаётся на месте снаружи `router-view`, маршруты `/`, `/new`, `/login` открываются и по ссылкам меню, и вводом адреса вручную, таблица `OrderTable.vue` получает данные через `props`, а единственный общий массив записей лежит в `ordersStore.js`.
 
 ---
 
@@ -19,7 +17,7 @@
 
 ### 2.1. Передача данных в таблицу
 
-**таблица получает массив через props, источник — ticketsStore.js**
+**таблица получает массив через props, источник — ordersStore.js**
 
 ### 2.2. Дерево каталога `frontend/src/`
 
@@ -28,14 +26,14 @@ frontend/src/
 ├── main.js                ← подключение роутера (app.use(router))
 ├── App.vue                ← корневой каркас: AppHeader + router-view
 ├── router.js              ← три маршрута (/, /new, /login)
-├── ticketsStore.js        ← единственный общий массив items (ref)
-├── api/                   ← клиент API и mock (ЛР6)
+├── ordersStore.js        ← единственный общий массив items (ref)
+├── api/                   ← клиент API и тестовые данные
 ├── components/
 │   ├── AppHeader.vue      ← шапка с навигацией <router-link>
-│   └── TicketTable.vue    ← таблица заказов, defineProps({ items })
+│   └── OrderTable.vue    ← таблица заказов, defineProps({ items })
 └── pages/
-    ├── TicketList.vue     ← список заказов (маршрут /)
-    ├── TicketNew.vue      ← создание заказа (маршрут /new)
+    ├── OrderList.vue     ← список заказов (маршрут /)
+    ├── OrderNew.vue      ← создание заказа (маршрут /new)
     └── Login.vue          ← вход (маршрут /login)
 ```
 
@@ -46,14 +44,14 @@ App.vue
 ├── AppHeader        ← всегда виден на всех страницах (снаружи router-view)
 └── main
     └── router-view  ← сюда vue-router подставляет страницу текущего маршрута:
-                        • /       → pages/TicketList.vue (внутри <TicketTable :items="items" />)
-                        • /new    → pages/TicketNew.vue
+                        • /       → pages/OrderList.vue (внутри <OrderTable :items="items" />)
+                        • /new    → pages/OrderNew.vue
                         • /login  → pages/Login.vue
 ```
 
 ### 2.4. Проверка маршрута `/new`
 
-Адрес `http://localhost:5173/new` вводится вручную в адресную строку и обновляется клавишей `F5`: открывается форма создания заказа `TicketNew.vue`, белого экрана и ошибок в консоли нет.
+Адрес `http://localhost:5173/new` вводится вручную в адресную строку и обновляется клавишей `F5`: открывается форма создания заказа `OrderNew.vue`, белого экрана и ошибок в консоли нет.
 
 ---
 
@@ -61,20 +59,20 @@ App.vue
 
 ### Маршруты
 - [x] Установлен `vue-router`
-- [x] `/` открывает список (`TicketList.vue`)
-- [x] `/new` открывает создание (`TicketNew.vue`)
+- [x] `/` открывает список (`OrderList.vue`)
+- [x] `/new` открывает создание (`OrderNew.vue`)
 - [x] `/login` открывает вход (`Login.vue`)
 - [x] Адреса проверены ручным вводом в адресную строку
 - [x] Меню в `AppHeader.vue` использует `<router-link>`
 - [x] Старые кнопки с `v-if` из `App.vue` удалены
 
 ### Компоненты и данные
-- [x] Есть `src/components/AppHeader.vue` и `src/components/TicketTable.vue`
+- [x] Есть `src/components/AppHeader.vue` и `src/components/OrderTable.vue`
 - [x] Есть три страницы в `src/pages/`
 - [x] `AppHeader` расположен снаружи `router-view`
 - [x] Таблица объявляет `defineProps({ items: { type: Array, required: true } })`
 - [x] Таблица не хранит собственную копию массива
-- [x] Единственный общий массив лежит в `src/ticketsStore.js`
+- [x] Единственный общий массив лежит в `src/ordersStore.js`
 - [x] `Pinia` не используется
 
 ### Git и защита
@@ -90,7 +88,7 @@ App.vue
 `/new` — клиентский маршрут внутри браузера: он только показывает пустую форму и ничего не отправляет на сервер. `POST /api/orders` — сетевой запрос к ASP.NET Core на порт `5000` с JSON-телом, который проверяет данные и создаёт запись.
 
 ### 2. Кто владеет массивом записей?
-Модуль `src/ticketsStore.js` с реактивным массивом `export const items = ref([...])`. Страница списка импортирует его и передаёт вниз таблице.
+Модуль `src/ordersStore.js` с реактивным массивом `export const items = ref([...])`. Страница списка импортирует его и передаёт вниз таблице.
 
 ### 3. Зачем таблице `props`?
 `props` делают таблицу независимой и переиспользуемой: она только рисует переданные строки и не знает, откуда они пришли (из тестового массива, из фильтра или с сервера). Данные текут сверху вниз и не дублируются.

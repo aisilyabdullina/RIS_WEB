@@ -9,7 +9,7 @@ const password = ref('')
   <section aria-labelledby="login-heading">
     <h2 id="login-heading">Вход в систему</h2>
     <p class="section-hint">
-      Авторизация сотрудников производственного участка (менеджер по заказам, начальник участка, инженер-наладчик).
+      Вход для сотрудников производственного участка.
     </p>
 
     <form class="card-form" @submit.prevent>

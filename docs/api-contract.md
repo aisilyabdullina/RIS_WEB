@@ -16,7 +16,7 @@
 | `GET /api/orders`                  | — *(опционально query: `status`, `assigneeUserId`)* | `200 OK`, массив заказов или `[]`        | —                                                                        |
 | `GET /api/orders/{id}`             | —                                   | `200 OK`, один заказ                                     | `404 Not Found`                                                          |
 | `POST /api/orders`                 | `title`, `modelId`, `description`   | `201 Created`, в ответе `id`, `number`, `status: "New"`  | `400 Bad Request` (ошибка проверки полей), `403 Forbidden` (не менеджер) |
-| `PATCH /api/orders/{id}/assignee`  | `assigneeUserId`                    | `200 OK`, обновлённый заказ                              | `400`, `403 Forbidden` (не начальник участка), `404`, `409` (заказ завершён) |
+| `PATCH /api/orders/{id}/assignee`  | `assigneeUserId`                    | `200 OK`, обновлённый заказ                              | `400` (нет такого пользователя или он не инженер), `403 Forbidden` (не начальник участка), `404`, `409` (заказ завершён) |
 | `PATCH /api/orders/{id}/status`    | `status`                            | `200 OK`, обновлённый заказ                              | `400`, `403 Forbidden` (чужой заказ), `404`, `409 Conflict` (недопустимый переход или нет исполнителя) |
 | `GET /api/models`                  | —                                   | `200 OK`, справочник моделей контроллеров                | —                                                                        |
 | `GET /api/users?role=Engineer`     | —                                   | `200 OK`, список инженеров `{id, fullName}`              | —                                                                        |
@@ -60,8 +60,7 @@
   "status": "New",
   "createdByUserId": 1,
   "assigneeUserId": null,
-  "createdAt": "2026-11-06T09:30:00Z",
-  "updatedAt": "2026-11-06T09:30:00Z"
+  "createdAt": "2026-11-06T09:30:00Z"
 }
 ```
 
@@ -73,7 +72,7 @@
   "status": 400,
   "errors": {
     "title": ["Поле title должно содержать от 5 до 80 символов."],
-    "modelId": ["Поле modelId (siteId) должно быть целым числом больше нуля."]
+    "modelId": ["Поле modelId должно быть целым числом больше нуля."]
   }
 }
 ```
